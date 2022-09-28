@@ -1,0 +1,8 @@
+site_name: FinRep
+site_url: https://finrep.com/
+nav:
+    - Home: index.md
+    - About: about.md
+theme: readthedocs
+plugins:
+    - mkdocstrings
