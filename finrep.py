@@ -44,11 +44,11 @@ class finance:
         maxdate = max(df_savings['date'].max(), df_superannuation['date'].max())
         idx = pd.date_range(mindate, maxdate, freq='MS')
         idx_df = pd.DataFrame({'date': idx})
-        stocks_range = idx_df.join(df_stocks, rsuffix='original')
+        stocks_range = idx_df.merge(df_stocks, how='left')
         stocks_range = stocks_range[['date', 'stock', 'units']]
         tickers = stocks_range['stock'].dropna().unique()
-        outlist = list(product(stocks_range['date'], tickers))
-        stocks_range = pd.DataFrame(data=outlist, columns=['date','stock']).merge(stocks_range, how='left')
+        outlist = list(product(stocks_range['date'].unique(), tickers))
+        stocks_range = pd.DataFrame(data=outlist, columns=['date','stock']).merge(stocks_range, on=['date', 'stock'], how='left')
         stocks_range['units'] = stocks_range['units'].fillna(0)
         stocks_range['unitsum'] = stocks_range.groupby(['stock']).cumsum()
         stocks_range = stocks_range.drop('units', axis=1)
@@ -87,7 +87,12 @@ def main():
     print(portfolio.stocks)
 
 
+
 if __name__ == "__main__":
     main()
 
+
+
+
 # TODO: integrate results with Preset (Apache superset) or another dashboard
+# TODO: Error > Stocks should have values on first and second month, but some problem with join/merge?
