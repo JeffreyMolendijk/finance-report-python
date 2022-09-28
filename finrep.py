@@ -90,32 +90,4 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
-                stocks=os.path.join('data', 'stocks.xlsx'), 
-                superannuation=os.path.join('data', 'super.xlsx'))
-
-# The dates don't match up. The join of idx with stocks is wrong (performed on index?)
-portfolio.type
-
-print(portfolio.show_portfolio())
-
-# TODO: use yahoo to add value of stocks on first of every month
 # TODO: integrate results with Preset (Apache superset) or another dashboard
-
-portfolio.type.loc[:,['date', 'stock', 'units']].groupby(['stock']).cumsum()
-
-x = portfolio.type.loc[:,['date', 'stock', 'units']]
-
-x['unitsum'] = x.groupby(['stock']).cumsum()
-x = x.drop('units', axis=1)
-x
-
-res = []
-for ticker in tickers:
-    res.append(pd.DataFrame({'date': hist.index, 'value': hist['Open'][ticker].values, 'stock': ticker}).reset_index(drop=True))
-
-
-x = x.merge(pd.concat(res), on=['date','stock'])
-
-portfolio.stocks['unitsum'] * portfolio.stocks['value']
