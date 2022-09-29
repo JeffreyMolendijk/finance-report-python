@@ -9,19 +9,19 @@ from itertools import product
 
 
 
-def read_File(input: str):
+def read_File(file_path: str):
     """Flexible file reader for .csv or .xlsx
 
     Args:
-        input (str): path to file
+        file_path (str): path to file
 
     Returns:
         _type_: pandas Dataframe
     """
-    if isstring(input):
+    if isstring(file_path):
         try:
-            if input.endswith('.csv'): return pd.read_csv(input)
-            if input.endswith('.xlsx'): return pd.read_excel(input)
+            if file_path.endswith('.csv'): return pd.read_csv(file_path)
+            if file_path.endswith('.xlsx'): return pd.read_excel(file_path)
         except:
             print('failed to load file from string')    
 
@@ -60,8 +60,8 @@ class finance:
         stocks_range['value'] = stocks_range['unitsum'] * stocks_range['price']
         self.stocks = stocks_range
         
-    def __validate_pandas(unvalidated_pandas, type: str):
-        if type == 'savings': return True 
+    def __validate_pandas(unvalidated_pandas, finance_type: str):
+        if finance_type == 'savings': return True 
         
     def show_portfolio(self):
         return self.savings.merge(self.superannuation, on = 'date')
@@ -90,8 +90,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
 
 
 # TODO: integrate results with Preset (Apache superset) or another dashboard
