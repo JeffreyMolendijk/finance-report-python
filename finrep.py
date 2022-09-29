@@ -28,8 +28,8 @@ def read_File(file_path: str):
 
 
 class finance:
-    """Finance class containing savings, stock and super subclasses
-    """
+    """Finance class containing savings, stock and super subclasses"""
+    
     def __init__(self, savings: str, stocks: str, superannuation: str):
         df_savings = read_File(savings)
         df_savings['type'] = 'savings'
@@ -78,6 +78,8 @@ class finance:
 
 
 def main():
+    """Contains example analysis code"""
+    
     portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
                     stocks=os.path.join('data', 'stocks.xlsx'), 
                     superannuation=os.path.join('data', 'super.xlsx'))
