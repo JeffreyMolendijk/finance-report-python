@@ -22,7 +22,7 @@ def read_File(file_path: str):
         try:
             if file_path.endswith('.csv'): return pd.read_csv(file_path)
             if file_path.endswith('.xlsx'): return pd.read_excel(file_path)
-        except:
+        except ValueError:
             print('failed to load file from string')    
 
 
