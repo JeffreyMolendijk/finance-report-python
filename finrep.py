@@ -1,9 +1,6 @@
-from lib2to3.pgen2.pgen import DFAState
 import os
-from sqlite3 import Timestamp
 from sre_compile import isstring
 import pandas as pd
-from datetime import date, datetime
 import yfinance as yf
 from itertools import product
 
