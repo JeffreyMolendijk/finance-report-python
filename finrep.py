@@ -76,7 +76,6 @@ class finance:
 
 def main():
     """Contains example analysis code"""
-    
     portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
                     stocks=os.path.join('data', 'stocks.xlsx'), 
                     superannuation=os.path.join('data', 'super.xlsx'))
