@@ -26,16 +26,16 @@ def read_File(file_path: str):
 
 class finance:
     """Finance class containing savings, stock and super subclasses"""
-    
+
     def __init__(self, savings: str, stocks: str, superannuation: str):
         df_savings = read_File(savings)
         df_savings['type'] = 'savings'
         self.savings = df_savings
-        
+
         df_superannuation = read_File(superannuation)
         df_superannuation['type'] = 'superannuation'
         self.superannuation = df_superannuation
-        
+
         df_stocks = read_File(stocks)
         mindate = min(df_savings['date'].min(), df_superannuation['date'].min())
         maxdate = max(df_savings['date'].max(), df_superannuation['date'].max())
@@ -56,19 +56,19 @@ class finance:
         stocks_range = stocks_range.merge(pd.concat(res), on=['date','stock'], how = 'left')
         stocks_range['value'] = stocks_range['unitsum'] * stocks_range['price']
         self.stocks = stocks_range
-        
+
     def __validate_pandas(unvalidated_pandas, finance_type: str):
         if finance_type == 'savings': return True 
-        
+
     def show_portfolio(self):
         return self.savings.merge(self.superannuation, on = 'date')
-        
+
     def forecast(self, months_predict: int):
         print(f'In {months_predict} months you will have infinite money!')
-    
+
     def optimize_portfolio():
         pass # tweak contribution parameters to determine optimum
-    
+
     def percentage_portfolio():
         pass # calculate distribution of portfolio
 
@@ -79,7 +79,7 @@ def main():
     portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
                     stocks=os.path.join('data', 'stocks.xlsx'), 
                     superannuation=os.path.join('data', 'super.xlsx'))
-                    
+
     portfolio.forecast(10)
     print(portfolio.show_portfolio())
     print(portfolio.stocks)
