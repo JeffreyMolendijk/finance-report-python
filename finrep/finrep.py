@@ -6,7 +6,6 @@ from itertools import product
 import plotly.express as px
 
 
-
 def read_File(file_path: str):
     """Flexible file reader for .csv or .xlsx
 
@@ -18,11 +17,12 @@ def read_File(file_path: str):
     """
     if isstring(file_path):
         try:
-            if file_path.endswith('.csv'): return pd.read_csv(file_path)
-            if file_path.endswith('.xlsx'): return pd.read_excel(file_path)
+            if file_path.endswith('.csv'): 
+                return pd.read_csv(file_path)
+            if file_path.endswith('.xlsx'): 
+                return pd.read_excel(file_path)
         except ValueError:
-            print('failed to load file from string')    
-
+            return None
 
 
 class finance:
@@ -45,7 +45,7 @@ class finance:
         stocks_range = stocks_range[['date', 'stock', 'units']]
         tickers = stocks_range['stock'].dropna().unique()
         outlist = list(product(stocks_range['date'].unique(), tickers))
-        stocks_range = pd.DataFrame(data=outlist, columns=['date','stock']).merge(stocks_range, on=['date', 'stock'], how='left')
+        stocks_range = pd.DataFrame(data=outlist, columns=['date', 'stock']).merge(stocks_range, on=['date', 'stock'], how='left')
         stocks_range['units'] = stocks_range['units'].fillna(0)
         stocks_range['unitsum'] = stocks_range.groupby(['stock']).cumsum()
         stocks_range = stocks_range.drop('units', axis=1)
@@ -53,18 +53,18 @@ class finance:
         res = []
         for ticker in tickers:
             res.append(pd.DataFrame({'date': hist.index, 'price': hist['Open'][ticker].values, 'stock': ticker}).reset_index(drop=True))
-        stocks_range = stocks_range.merge(pd.concat(res), on=['date','stock'], how = 'left')
+        stocks_range = stocks_range.merge(pd.concat(res), on=['date', 'stock'], how='left')
         stocks_range['value'] = stocks_range['unitsum'] * stocks_range['price']
         self.stocks = stocks_range
 
     def __validate_pandas(unvalidated_pandas, finance_type: str):
-        if finance_type == 'savings': return True 
+        if finance_type == 'savings': return True
 
     def get_portfolio(self):
         stockval = self.stocks[['date', 'value', 'stock']].rename(columns={'value': 'amount', 'stock': 'type'})
         portfolio_total = pd.concat([self.savings, self.superannuation, stockval])
         return portfolio_total
-    
+
     def show_portfolio(self):
         """Generates a plotly object showing portfolio distribution
 
@@ -78,18 +78,17 @@ class finance:
         print(f'In {months_predict} months you will have infinite money!')
 
     def optimize_portfolio():
-        pass # tweak contribution parameters to determine optimum
+        pass  # tweak contribution parameters to determine optimum
 
     def percentage_portfolio():
-        pass # calculate distribution of portfolio
-
+        pass  # calculate distribution of portfolio
 
 
 def main():
     """Contains example analysis code"""
     portfolio = finance(savings=os.path.join('data', 'savings.xlsx'),
-    stocks=os.path.join('data', 'stocks.xlsx'), 
-    superannuation=os.path.join('data', 'super.xlsx'))
+                        stocks=os.path.join('data', 'stocks.xlsx'),
+                        superannuation=os.path.join('data', 'super.xlsx'))
 
     print(portfolio.get_portfolio())
 
@@ -98,5 +97,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-

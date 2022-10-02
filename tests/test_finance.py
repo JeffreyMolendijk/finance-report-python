@@ -9,9 +9,9 @@ def test_read_File():
     assert isinstance(read_File(os.path.join('data', 'savings.xlsx')), pd.DataFrame), 'Is not a dataframe'
 
 def test_finance():
-        portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
-                    stocks=os.path.join('data', 'stocks.xlsx'), 
-                    superannuation=os.path.join('data', 'super.xlsx'))
-        assert isinstance(portfolio.savings, pd.DataFrame), 'savings is not a dataframe'
-        assert isinstance(portfolio.stocks, pd.DataFrame), 'stocks is not a dataframe'
-        assert isinstance(portfolio.superannuation, pd.DataFrame), 'savings is not a dataframe'
+    portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
+                stocks=os.path.join('data', 'stocks.xlsx'), 
+                superannuation=os.path.join('data', 'super.xlsx'))
+    assert isinstance(portfolio.savings, pd.DataFrame), 'savings is not a dataframe'
+    assert isinstance(portfolio.stocks, pd.DataFrame), 'stocks is not a dataframe'
+    assert isinstance(portfolio.superannuation, pd.DataFrame), 'savings is not a dataframe'
