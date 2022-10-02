@@ -3,6 +3,7 @@ from sre_compile import isstring
 import pandas as pd
 import yfinance as yf
 from itertools import product
+import plotly.express as px
 
 
 
@@ -26,7 +27,6 @@ def read_File(file_path: str):
 
 class finance:
     """Finance class containing savings, stock and super subclasses"""
-
     def __init__(self, savings: str, stocks: str, superannuation: str):
         df_savings = read_File(savings)
         df_savings['type'] = 'savings'
@@ -60,8 +60,19 @@ class finance:
     def __validate_pandas(unvalidated_pandas, finance_type: str):
         if finance_type == 'savings': return True 
 
+    def get_portfolio(self):
+        stockval = self.stocks[['date', 'value', 'stock']].rename(columns={'value': 'amount', 'stock': 'type'})
+        portfolio_total = pd.concat([self.savings, self.superannuation, stockval])
+        return portfolio_total
+    
     def show_portfolio(self):
-        return self.savings.merge(self.superannuation, on = 'date')
+        """Generates a plotly object showing portfolio distribution
+
+        Returns:
+            _type_: plotly object
+        """
+        fig = px.bar(self.get_portfolio(), x="date", y="amount", color="type", title="Portfolio distribution")
+        return fig
 
     def forecast(self, months_predict: int):
         print(f'In {months_predict} months you will have infinite money!')
@@ -76,19 +87,16 @@ class finance:
 
 def main():
     """Contains example analysis code"""
-    portfolio = finance(savings=os.path.join('data', 'savings.xlsx'), 
-                    stocks=os.path.join('data', 'stocks.xlsx'), 
-                    superannuation=os.path.join('data', 'super.xlsx'))
+    portfolio = finance(savings=os.path.join('data', 'savings.xlsx'),
+    stocks=os.path.join('data', 'stocks.xlsx'), 
+    superannuation=os.path.join('data', 'super.xlsx'))
 
-    portfolio.forecast(10)
-    print(portfolio.show_portfolio())
-    print(portfolio.stocks)
+    print(portfolio.get_portfolio())
 
+    portfolio.show_portfolio().show()
 
 
 if __name__ == "__main__":
     main()
 
 
-# TODO: integrate results with Preset (Apache superset) or another dashboard
-# TODO: Error > Stocks should have values on first and second month, but some problem with join/merge?
