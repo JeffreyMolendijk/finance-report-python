@@ -95,8 +95,6 @@ class finance:
     def optimize_portfolio():
         pass  # tweak contribution parameters to determine optimum
 
-    def percentage_portfolio():
-        pass  # calculate distribution of portfolio
 
 
 def main():
@@ -106,7 +104,7 @@ def main():
                         superannuation=os.path.join('data', 'super.xlsx'))
 
     print(portfolio.get_portfolio())
-
+    print(type(portfolio.show_portfolio()))
     portfolio.show_portfolio().show()
 
 
