@@ -20,7 +20,7 @@ def test_get_portfolio():
                         superannuation=os.path.join('data', 'super.xlsx'))
     assert isinstance(portfolio.get_portfolio(), pd.DataFrame), 'get_portfolio() should return a dataframe'
 
-def test_get_portfolio():
+def test_show_portfolio():
     portfolio = finance(savings=os.path.join('data', 'savings.xlsx'),
                         stocks=os.path.join('data', 'stocks.xlsx'),
                         superannuation=os.path.join('data', 'super.xlsx'))

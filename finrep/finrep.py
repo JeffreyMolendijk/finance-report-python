@@ -53,19 +53,27 @@ class finance:
         stocks_range['unitsum'] = stocks_range.groupby(['stock']).cumsum()
         stocks_range = stocks_range.drop('units', axis=1)
         hist = yf.download(list(tickers), start=mindate, end=maxdate, interval='1mo')
+
         res = []
         for ticker in tickers:
-            res.append(pd.DataFrame({'date': hist.index, 
-                'price': hist['Open'][ticker].values, 
-                'stock': ticker}).reset_index(drop=True))
+            res.append(pd.DataFrame({'date': hist.index,
+                                    'price': hist['Open'][ticker].values,
+                                    'stock': ticker}).reset_index(drop=True))
         stocks_range = stocks_range.merge(pd.concat(res), on=['date', 'stock'], 
-                                        how='left')
+                                            how='left')
         stocks_range['value'] = stocks_range['unitsum'] * stocks_range['price']
         self.stocks = stocks_range
 
-    def __validate_pandas(unvalidated_pandas, finance_type: str):
-        if finance_type == 'savings': 
-            return True
+    def __validate_pandas(self):
+        """Validate whether loaded data is valid
+
+        Returns:
+            _type_: boolean
+        """
+        if len(self.savings) == 2 and \
+            len(self.superannuation) == 2 and \
+            len(self.stocks) == 4:
+            return True 
         return False
 
     def get_portfolio(self):
@@ -86,7 +94,7 @@ class finance:
             _type_: plotly object
         """
         fig = px.bar(self.get_portfolio(), x="date", y="amount", color="type", 
-                    title="Portfolio distribution")
+                        title="Portfolio distribution")
         return fig
 
     def forecast(self, months_predict: int):
@@ -94,7 +102,6 @@ class finance:
 
     def optimize_portfolio():
         pass  # tweak contribution parameters to determine optimum
-
 
 
 def main():
