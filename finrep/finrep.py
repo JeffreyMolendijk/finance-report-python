@@ -23,8 +23,7 @@ def read_File(file_path: str):
                 return pd.read_excel(file_path)
         except ValueError:
             return None
-    else:
-        return None
+    return None
 
 
 class finance:
@@ -57,18 +56,17 @@ class finance:
         res = []
         for ticker in tickers:
             res.append(pd.DataFrame({'date': hist.index, 
-            'price': hist['Open'][ticker].values, 
-            'stock': ticker}).reset_index(drop=True))
+                'price': hist['Open'][ticker].values, 
+                'stock': ticker}).reset_index(drop=True))
         stocks_range = stocks_range.merge(pd.concat(res), on=['date', 'stock'], 
-        how='left')
+                                        how='left')
         stocks_range['value'] = stocks_range['unitsum'] * stocks_range['price']
         self.stocks = stocks_range
 
     def __validate_pandas(unvalidated_pandas, finance_type: str):
         if finance_type == 'savings': 
             return True
-        else: 
-            return False
+        return False
 
     def get_portfolio(self):
         """Generates portfolio summary with monthly values
@@ -88,7 +86,7 @@ class finance:
             _type_: plotly object
         """
         fig = px.bar(self.get_portfolio(), x="date", y="amount", color="type", 
-        title="Portfolio distribution")
+                    title="Portfolio distribution")
         return fig
 
     def forecast(self, months_predict: int):
