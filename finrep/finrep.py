@@ -17,16 +17,19 @@ def read_File(file_path: str):
     """
     if isstring(file_path):
         try:
-            if file_path.endswith('.csv'): 
+            if file_path.endswith('.csv'):
                 return pd.read_csv(file_path)
-            if file_path.endswith('.xlsx'): 
+            if file_path.endswith('.xlsx'):
                 return pd.read_excel(file_path)
         except ValueError:
             return None
+    else:
+        return None
 
 
 class finance:
     """Finance class containing savings, stock and super subclasses"""
+
     def __init__(self, savings: str, stocks: str, superannuation: str):
         df_savings = read_File(savings)
         df_savings['type'] = 'savings'
@@ -45,23 +48,36 @@ class finance:
         stocks_range = stocks_range[['date', 'stock', 'units']]
         tickers = stocks_range['stock'].dropna().unique()
         outlist = list(product(stocks_range['date'].unique(), tickers))
-        stocks_range = pd.DataFrame(data=outlist, columns=['date', 'stock']).merge(stocks_range, on=['date', 'stock'], how='left')
+        stocks_range = pd.DataFrame(data=outlist, columns=['date', 'stock']).merge(
+            stocks_range, on=['date', 'stock'], how='left')
         stocks_range['units'] = stocks_range['units'].fillna(0)
         stocks_range['unitsum'] = stocks_range.groupby(['stock']).cumsum()
         stocks_range = stocks_range.drop('units', axis=1)
         hist = yf.download(list(tickers), start=mindate, end=maxdate, interval='1mo')
         res = []
         for ticker in tickers:
-            res.append(pd.DataFrame({'date': hist.index, 'price': hist['Open'][ticker].values, 'stock': ticker}).reset_index(drop=True))
-        stocks_range = stocks_range.merge(pd.concat(res), on=['date', 'stock'], how='left')
+            res.append(pd.DataFrame({'date': hist.index, 
+            'price': hist['Open'][ticker].values, 
+            'stock': ticker}).reset_index(drop=True))
+        stocks_range = stocks_range.merge(pd.concat(res), on=['date', 'stock'], 
+        how='left')
         stocks_range['value'] = stocks_range['unitsum'] * stocks_range['price']
         self.stocks = stocks_range
 
     def __validate_pandas(unvalidated_pandas, finance_type: str):
-        if finance_type == 'savings': return True
+        if finance_type == 'savings': 
+            return True
+        else: 
+            return False
 
     def get_portfolio(self):
-        stockval = self.stocks[['date', 'value', 'stock']].rename(columns={'value': 'amount', 'stock': 'type'})
+        """Generates portfolio summary with monthly values
+
+        Returns:
+            _type_: pandas DataFrame
+        """
+        stockval = self.stocks[['date', 'value', 'stock']].rename(columns={
+            'value': 'amount', 'stock': 'type'})
         portfolio_total = pd.concat([self.savings, self.superannuation, stockval])
         return portfolio_total
 
@@ -71,7 +87,8 @@ class finance:
         Returns:
             _type_: plotly object
         """
-        fig = px.bar(self.get_portfolio(), x="date", y="amount", color="type", title="Portfolio distribution")
+        fig = px.bar(self.get_portfolio(), x="date", y="amount", color="type", 
+        title="Portfolio distribution")
         return fig
 
     def forecast(self, months_predict: int):
