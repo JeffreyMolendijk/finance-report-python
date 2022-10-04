@@ -25,3 +25,9 @@ def test_show_portfolio():
                         stocks=os.path.join('data', 'stocks.xlsx'),
                         superannuation=os.path.join('data', 'super.xlsx'))
     assert isinstance(portfolio.show_portfolio(), plotly.graph_objs._figure.Figure), 'show_portfolio() should return a plotly object'
+
+def test_show_monthly_change():
+    portfolio = finance(savings=os.path.join('data', 'savings.xlsx'),
+                        stocks=os.path.join('data', 'stocks.xlsx'),
+                        superannuation=os.path.join('data', 'super.xlsx'))
+    assert isinstance(portfolio.show_monthly_change(), plotly.graph_objs._figure.Figure), 'show_monthly_change() should return a plotly object'

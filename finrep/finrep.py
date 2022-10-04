@@ -97,6 +97,17 @@ class finance:
                         title="Portfolio distribution")
         return fig
 
+    def show_monthly_change(self):
+        """Generates a plotly object showing monthly change in portfolio
+
+        Returns:
+            _type_: plotly object
+        """
+        x = self.get_portfolio().groupby('date').sum('amount')
+        x = x.diff().reset_index().iloc[2:,:]
+        fig = px.bar(x, x="date", y="amount", title="Monthly change")
+        return fig
+
     def forecast(self, months_predict: int):
         print(f'In {months_predict} months you will have infinite money!')
 
@@ -113,6 +124,7 @@ def main():
     print(portfolio.get_portfolio())
     print(type(portfolio.show_portfolio()))
     portfolio.show_portfolio().show()
+    portfolio.show_monthly_change().show()
 
 
 if __name__ == "__main__":
